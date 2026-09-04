@@ -1,14 +1,18 @@
 import { useState } from "react"
 
 const CreateBlog = () => {
+    const [clientMessage, setClientMessage] = useState("What's on your mind?");
+    const [loading, setLoading] = useState(false);
 
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState(""); 
 
     const url = "http://localhost:5050/blogs/create"
 
     async function sendCreateBlogRequest() {
         try {
+            setLoading(true);
+
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -17,8 +21,15 @@ const CreateBlog = () => {
                 body: JSON.stringify({ title: title, content: content })
             });
 
-            const data = response.json();
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${ response.status }`);
+            }
+            
+            const data = await response.json();
             console.log(data);
+
+            setClientMessage(data?.message);
+            setLoading(false);
         } catch (error) {
             console.error("An error has occurred while trying to create a new Blog Post: ", error);
         }
@@ -54,7 +65,10 @@ const CreateBlog = () => {
                 <button className='create-blog-button' type='button' onClick={ (e) => sendCreateBlogRequest(e) }>Create Blog</button>
             </form>
         </div>
-    <a className="underline" href="/">Return to Home</a>
+    <div className="flex flex-col gap-4">
+        <a className="underline" href="/">Return to Home</a>
+        { loading === false && <span className="border px-4 py-2 max-w-[375px]">{ clientMessage }</span>}
+    </div>
     </>
   )
 }
