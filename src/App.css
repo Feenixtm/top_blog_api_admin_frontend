@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+.create-blog-button {
+  border: 1px solid black;
+  border-radius: 0.125rem;
+  padding: 0.25rem 0;
+}
+
+.create-blog-button:hover {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+}
+
+.link {
+  text-decoration: underline;
+}
